@@ -109,3 +109,10 @@ Protects web applications from malicious attacks (SQL injection, XSS, etc.) by f
 ## Amazon CloudFront: 
 Accelerates the delivery of web content globally, improving performance for users and reducing server load.
 CloudFront is a Content Delivery Network (CDN) service provided by Amazon Web Services (AWS). It is used to distribute content (such as images, videos, JavaScript, HTML, etc.) to users across the world with low latency and high transfer speeds.
+
+
+# difference between AWS ECS & AWS EKS service :
+AWS ECS is a fully AWS-native container orchestration service that is simple to set up, tightly integrated with AWS, and requires low operational effort.
+AWS EKS is a managed Kubernetes service that provides standard Kubernetes APIs, greater flexibility, and multi-cloud portability.
+ECS is ideal for AWS-centric teams looking for simplicity and faster deployment.
+EKS is better suited for large-scale, complex platforms requiring Kubernetes features and ecosystem tools.
