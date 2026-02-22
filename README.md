@@ -1,4 +1,11 @@
 # AWS
+
+# Waterfall:	
+1. Requirements → 2. Design → 3. Implementation → 4. Testing → 5. Deployment → 6. Maintenance
+# Agile:
+	[ Sprint 1 ] → [ Sprint 2 ] → [ Sprint 3 ] → ... (Continuous delivery & feedback)
+
+
 ## Cross-account IAM in AWS
 Refers to the practice of allowing resources or users in one AWS account (Account A) to securely access resources in another AWS account (Account B), using AWS Identity and Access Management (IAM).
 
@@ -494,3 +501,46 @@ Automated tests, health checks, alerts, and instant rollback via Helm/GitOps.
 Via APIs with contract testing and backward-compatible changes.
 
 Git → CI → Image Registry → GitOps Repo → Argo CD → Kubernetes
+
+# Can Elastic file store be used for 2 EC2 instances? YES
+EFS is a FUlly Managed Network File System & Shared file storage.
+Both instances read/write to the same files.
+
+✅ EFS Specifically built for Multiple EC2 instances to mount the same filesystem simultaneously.
+Port 2049 (NFS) inbound from EC2 security group
+To use EFS with 2 EC2 instances: Both EC2 instances must be in the same VPC
+EFS works within the same AWS region.
+
+Example use cases:
+Shared uploads folder
+Shared logs
+Shared application data
+CMS systems like WordPress
+Microservices sharing files
+
+
+| Feature               | **EFS**             | **EBS**                        |
+| --------------------- | ------------------- | ------------------------------ |
+| Storage Type          | File Storage (NFS)  | Block Storage                  |
+| Mount Type            | Network File System | Attached as disk to EC2        |
+| Multi-Instance Access | ✅ Yes (many EC2s)   | ❌ No (one EC2 at a time*)      |
+| Scalability           | Auto-scales         | Fixed size (resize manually)   |
+| Performance           | Moderate            | High performance / low latency |
+| Best For              | Shared files        | Databases, OS disks            |
+* EBS can be detached and reattached to another EC2, but not simultaneously.
+
+✅ Use EBS When:
+Running database (MySQL, PostgreSQL, MongoDB)
+Need low latency
+Need high IOPS
+Need consistent performance
+Boot volumes
+Best with: Amazon EC2 & Amazon RDS (internally uses EBS)
+
+✅ Use EFS When:
+Multiple EC2 instances need same files
+Shared application data
+Container workloads
+Kubernetes persistent volumes
+Auto-scaling web servers
+Works great with: Amazon EKS & Amazon EC2
