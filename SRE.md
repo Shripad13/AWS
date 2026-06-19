@@ -55,4 +55,222 @@ Fluentd is an open-source, vendor-neutral data collector that acts as a unified 
 
 
  # Service Level Indicator (SLI) -
-  
+It’s the actual measurement of how your system is performing right now
+
+Availability = (Successful Requests / Total Requests)*100
+
+# Service Level Objective (SLO) -
+Sets internal targets for reliability and performance 
+It’s your goal. What you’re aiming for. Your Internal Promise to Yourself
+you should know exactly how much failure can be acceptable.
+# Service Level Agreement (SLA) -
+The Legal Promise to Your Customers
+Promises reliability and performance to customers, often with penalties for breaches
+
+
+SLO must always be stricter than SLA.
+
+
+# Mean Time to Repair (MTTR) in ITSM
+It is a key performance indicator (KPI) measuring the average time taken to fix a system or service after a failure, including diagnostic and repair time. It typically spans from detection to full functionality, aiming to minimize downtime and maintain Service Level Agreements (SLAs).
+
+Often refers to Mean Time to Repair, Recovery, Respond, or Resolve depending on the organization's focus.
+
+Formula: 
+MTTR = Total Downtime / Number of Incidents
+Goal: A low MTTR indicates efficient, fast-acting teams and high service reliability.
+
+Why Track MTTR:
+1. Reduced Downtime: Quick recovery minimizes impact on business operations.
+2. Process Improvement: High MTTR reveals bottlenecks in incident management processes.
+3. SLA Management: Ensures compliance with contractual uptime agreements.
+
+
+# latency metrics -
+P90, P95, P99 are latency metrics used to evaluate the performance of a system. They represent the percentage of requests that are completed within a certain time frame.
+- P90 (90th Percentile): 90% of requests are completed within this time frame, while 10% may take longer. It gives an idea of the typical response time for most users.
+- P95 (95th Percentile): 95% of requests are completed within this time
+- P99 (99th Percentile): 99% of requests are completed within this time
+
+It provides insight into the typical user experience and can highlight performance issues affecting a significant portion of users. For example, if P90 is 200ms, it means that 90% of requests are completed in 200ms or less, while the remaining 10% may take longer.
+
+
+## Logs
+Logs are important & critical for business
+
+Transactional Logs - About Busiuness transactions, user activities, financial transactions, etc. They are crucial for auditing, compliance, and troubleshooting.
+
+Non-Transactional Logs - Apps generally produce logs about its functionality likek whether it can connect to DB, whether it can connect to any other pheripherals or not, whether it can read the config file or not, etc. These logs are important for troubleshooting and debugging the application. They are also important for monitoring the health of the application and identifying any potential issues before they become critical.
+
+
+
+
+During Scale in & Scale out you might loose the logs if you are not using a log shipper/ aggregator to collect the logs from the pods and send them to a central location like ELK stack. When a pod is terminated during scale in, the logs stored in that pod will be lost. To prevent this, you can use a log shipper like Fluentd or Filebeat to collect the logs from the pods and send them to a central location before the pod is terminated. This way, even if the pod is terminated, the logs will still be available in the central location for analysis and troubleshooting.
+
+1️⃣ Centralized Logging
+Instead of logging separately on multiple servers, containers, or pods, log shippers (like Logstash, Fluentd, Filebeat) forward logs to a centralized platform such as Elasticsearch.
+Why important?
+Single place to search logs
+Easier debugging in distributed systems
+No need to SSH into multiple servers
+
+
+2️⃣ Handles Distributed & Microservices Environments
+In containerized platforms like Kubernetes, pods are ephemeral (they come and go).
+Log shippers:
+Capture logs before containers terminate
+Ensure logs are not lost
+Attach metadata (pod name, namespace, node)
+
+3️⃣ Log Normalization & Parsing
+Aggregators can:
+Convert unstructured logs into structured format (JSON)
+Enrich logs with host/IP/app details
+Apply filtering and transformations
+This improves:
+Searchability
+Alerting accuracy
+Dashboard creation
+
+4️⃣ Real-Time Monitoring & Alerting
+
+Centralized logs allow:
+Faster incident detection
+Alerting based on error patterns
+Correlation across services
+Example:
+If one microservice fails, you can trace request flow across services using logs.
+
+5️⃣ Scalability & Performance
+Instead of applications directly writing to databases:
+Log shippers buffer data
+Handle backpressure
+Support load balancing
+Prevent application performance impact
+
+
+7️⃣ Improves MTTR (Mean Time To Resolution)
+With centralized searchable logs:
+Faster root cause analysis
+Cross-system correlation
+Historical log analysis
+
+6️⃣ Security & Compliance
+Log aggregation helps with:
+Audit trails
+Security event monitoring
+Retention policies
+Access control
+Critical for regulated industries (e.g., banking, fintech).
+
+
+Splunk - Legacy, tool Super costly & efficient in space of Log aggregator.
+
+
+Elastic Stack - Open source, cost effective, widely used in the industry. It consists of Elasticsearch as a DB (search engine), Logstash (log shipper), and Kibana (visualization). It is highly scalable and flexible, making it a popular choice for log aggregation and analysis.
+
+Elasticsearch, Logstash, Kibana - keep all 3 in single server or separate servers based on the scale of your application and the volume of logs. For small to medium applications, you can keep all 3 components on a single server. For larger applications with high log volume, it’s recommended to separate them onto different servers for better performance and scalability.
+
+# Filebeat- 
+filebeat needs to install on the Nodes where the pods are running to collect the logs from the pods and send them to Logstash. It acts as a log shipper, forwarding logs from the nodes to the central logging system for analysis and visualization.
+Filebeat installed as an agent on server & monitors the log files/ locations that you specify , collect log events & forwards them either to Elastic search or Logstash for indexing.
+
+cat /etc/filebeat/filebeat.yml -
+In this file you can tell which logs to capture & whom to send the logs 
+
+# 
+
+# Integration between kibana & Elastic - 
+During the installation of Kibana , Generate the token from elasticsearch and use that token to connect kibana to elasticsearch. This way, kibana can access the data stored in elasticsearch and provide visualizations and dashboards based on that data. The token serves as an authentication mechanism to ensure secure communication between kibana and elasticsearch.
+
+/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
+
+Provide this token to ELK UI.
+
+
+# How Logs work with in the system in linux?
+rsyslog - Collects logs from all the programs in the server. Its like dumpyard
+Logs are stored in plain text (/var/log/syslog, /var/log/messgaes)
+Easy to read & parse manually.
+
+journald logs -  Defines the path of the file that these logs to be stored in.
+Uses a binary format, not human-readable. (/var/log/journal/)
+you view logs with journalctl command.
+
+Sys log Identifier for logs needs to be updated in system service file
+/etc/rsyslog.d/backend.conf
+
+# Logstash Integration with ElasticSearch -
+In filebeat.yml file we need to update host of Elasticsearch at Logstash Output 
+
+sudo systemctl retstart filebeat 
+
+For filebeat , we mentioned who is the output
+For logstash, we need to define that it has to accept the logs from FILEBEAT & output to elastic.
+
+\\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
+On ELK Server 
+cat /etc/logstash/conf.d/beats.conf
+Inside this file, update Input with port & Output as Elastic host server.
+Logstash should authenticate to Elastic - Add username & Token as well 
+
+# Indexing & Grok | Converting Unstructured Logs into Structured Logs
+In beats.conf file update filters
+
+filter {
+  if [message] =~ "^\{.*"{
+  json {
+    source = "message"
+       }
+  } else {
+
+  }
+}
+
+
+output block -
+
+output {
+  elasticsearch {
+    hosts = ["https://localhost:9200"]
+    data_stream = "auto"
+    ssl_verification_mode = "none"
+    user = "elastic"
+    password = "19i0ii2eh1l94n"
+    index = "%{[fields][component]}-%{+YYYY.MM.DD}"
+  }
+}
+
+
+# In filebeat.yml file , In fields section -
+For Frontend & Backend logs 
+component: "{{ component }}"
+
+Also update log folder & Path name 
+
+
+# How to Convert Unstructured Logs into Structured Logs
+Using Grok expression with Grok Debugger
+
+We have to convert frontend logs bcoz frontend logs are very raw in access.log file
+first who tells what is the default structure of logs
+In nginx.conf file you can find that
+
+https://grokdebugger.com/
+https://github.com/cjslack/grok-debugger/blob/master/public/patterns/grok-patterns
+
+Prepare Grok Pattern & update the Grok Filer Plugin in beats.conf 
+
+
+filter {
+  if [fields][component == "backend" and [messgae] =~ "^\{.*"{
+  json {
+    source = "message"
+       }
+  } if [fields][component == "frontend" {
+  grok {
+    match = {"message" => "<%{MONTH:Month}%{SPACE}%{MONTHDAY:Day},%{SPACE}%{YEAR:Year}%{SPACE}%{TIME:Time}%{SPACE}%{WORD:AMPM}%{SPACE}%{WORD:Timezone}>%{SPACE}<%{LOGLEVEL:Loglevel}>%{SPACE}<%{WORD:Source}"}
+  }
+
+  }
+  }

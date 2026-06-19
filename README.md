@@ -544,3 +544,11 @@ Container workloads
 Kubernetes persistent volumes
 Auto-scaling web servers
 Works great with: Amazon EKS & Amazon EC2
+
+
+Rolling Update → Gradually replaces old version with new version instance by instance
+Canary Deployment → Runs both versions simultaneously and controls traffic split
+
+
+✔ Rolling Update = infrastructure-level replacement
+✔ Canary = traffic-level control
