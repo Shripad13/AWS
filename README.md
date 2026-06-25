@@ -552,3 +552,6 @@ Canary Deployment → Runs both versions simultaneously and controls traffic spl
 
 ✔ Rolling Update = infrastructure-level replacement
 ✔ Canary = traffic-level control
+
+ ## OpenTelemetry
+ ![Project Architecture](AWS/OpenTelemetry_Architecture.png)
