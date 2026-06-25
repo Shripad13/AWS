@@ -29,4 +29,4 @@ nr-agent needs to be installed on source servers
 
 
  ## OpenTelemetry
- ![Project Architecture](AWS/OpenTelemetry_Architecture.png)
+ ![Project Architecture](OpenTelemetry_Architecture.png)
