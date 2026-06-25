@@ -26,3 +26,7 @@ nr-agent needs to be installed on source servers
 
  $ npm install newrelic --save          # Run this command on Backend servers
  $ NEW_RELIC_APP_NAME=backend-dev NEW_RELIC_LICENSE_KEY=hhnmknswhiejlnxs node -r newrelic YOUR_MAINFILENAME.js
+
+
+ ## OpenTelemetry
+ ![Project Architecture](AWS/OpenTelemetry_Architecture.png)
