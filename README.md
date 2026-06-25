@@ -554,4 +554,4 @@ Canary Deployment → Runs both versions simultaneously and controls traffic spl
 ✔ Canary = traffic-level control
 
  ## OpenTelemetry
- ![Project Architecture](AWS/OpenTelemetry_Architecture.png)
+ ![Project Architecture](OpenTelemetry_Architecture.png)
