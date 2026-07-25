@@ -278,7 +278,7 @@ Reduce storage costs
 Automate data retention policies
 Manage backups, logs, and archives
 
-3. Application running on Private EC2 machine  & application has to fetch some images which are in S2. How can this be achieved?
+3. Application running on Private EC2 machine  & application has to fetch some images which are in S3. How can this be achieved?
 A private EC2 instance can access S3 securely by attaching an IAM role and using an S3 VPC Gateway Endpoint, which allows private access without NAT or internet exposure.
 
 4. WHat are endpoints ?
@@ -296,11 +296,12 @@ S3 & DynamoDB use Gateway Endpoints — not Interface Endpoints
    b. Canary Deployment
    c. ROlling Updates
 
-6. What is Elatic Network Interface (ENI)?
+6. What is Elastic Network Interface (ENI)?
 An Elastic Network Interface (ENI) is a virtual network interface that can be attached to an EC2 instance in a VPC. It represents a virtual network card and can have its own private IP address, public IP address, security groups, and MAC address.
 
 7. What is AWS Systems Manager (SSM) and how does it help in managing EC2 instances?
-AWS Systems Manager (SSM) is a management service that helps you automatically manage your EC2 instances and other AWS resources. It provides a unified interface to view operational data from multiple AWS services and allows you to automate operational tasks across your AWS resources.
+AWS Systems Manager is a centralized operations hub that helps you manage, automate, and secure your servers, virtual machines, and cloud resources at scale. 
+It eliminates the need for SSH or bastion hosts by providing secure browser-based access, automated patching, and configuration management across hybrid and multi-cloud environments.
 With SSM, you can:   
 - Remotely manage and configure EC2 instances without needing SSH access.
 - Automate patch management, software installation, and configuration changes.
@@ -311,7 +312,7 @@ With SSM, you can:
 - Integrate with other AWS services for enhanced management capabilities.
 - Overall, SSM simplifies the management of EC2 instances, improves security, and reduces operational overhead.
   
-8. How to monitor EC2 instances without CloudWatch?
+1. How to monitor EC2 instances without CloudWatch?
 You can monitor EC2 instances without CloudWatch by using alternative methods such as: 
 1. SSH Access: Manually log in to the instance via SSH to check system metrics using commands like top, htop, vmstat, iostat, netstat, etc.
 2. Third-Party Monitoring Tools: Use tools like Nagios, Zabbix, Datadog, New Relic, or Prometheus to monitor instance performance and health.
@@ -323,7 +324,7 @@ You can monitor EC2 instances without CloudWatch by using alternative methods su
 8. Network Monitoring: Use VPC Flow Logs to monitor network traffic to and from the instance.
 Note: While these methods can provide insights into EC2 instance performance, they may not offer the same level of integration and ease of use as CloudWatch.
 
-9. How to troubleshoot & fix storage issue in EC2 instance?
+1. How to troubleshoot & fix storage issue in EC2 instance?
 To troubleshoot and fix storage issues in an EC2 instance, follow these steps:   
 1. Check Disk Space Usage:
    - SSH into the EC2 instance.
@@ -358,7 +359,7 @@ To troubleshoot and fix storage issues in an EC2 instance, follow these steps:
    - Implement automated alerts for disk space thresholds.
 By following these steps, you can effectively troubleshoot and resolve storage issues on an EC2 instance.
 
-10. How to launch Public EC2 instance?
+1.  How to launch Public EC2 instance?
 To launch a public EC2 instance, follow these steps:
 1. Log in to the AWS Management Console.
 2. Navigate to the EC2 Dashboard.
@@ -395,14 +396,14 @@ To determine if a subnet is public or private in AWS, you can check the followin
 - Examine the routes in the route table:
    - If there is a route that directs traffic to an Internet Gateway (IGW) (e.g., 0.0.0.0/0 -> igw-xxxxxxxx), the subnet is public.
    - If there is no such route, the subnet is private.
-2. Auto-assign Public IP Setting:
-3. While launching an instance in the subnet, check if the "Auto-assign Public IP" option is enabled by default.
+1. Auto-assign Public IP Setting:
+2. While launching an instance in the subnet, check if the "Auto-assign Public IP" option is enabled by default.
 - If it is enabled, the subnet is likely public.
 - If it is disabled, the subnet is likely private.
-3. Internet Gateway Association:
+1. Internet Gateway Association:
 - Check if the VPC associated with the subnet has an Internet Gateway attached.
 - A subnet in a VPC with an Internet Gateway and appropriate route table entries is typically public.
-4. NAT Gateway/Instance:
+1. NAT Gateway/Instance:
  - If the subnet routes traffic to a NAT Gateway or NAT Instance for internet access, it is a private subnet.
  - If it routes directly to an Internet Gateway, it is a public subnet.
 By checking these criteria, you can determine whether a subnet is public or private in AWS.
@@ -555,3 +556,109 @@ Canary Deployment → Runs both versions simultaneously and controls traffic spl
 
  ## OpenTelemetry
  ![Project Architecture](OpenTelemetry_Architecture.png)
+
+
+# AWS Elastic IP (EIP) 
+An AWS Elastic IP (EIP) is a static, public IPv4 address that you can allocate to your AWS account/region and then associate with resources like an EC2 instance.
+
+Public IP addresses on EC2 instances can change (e.g., after stop/start), but some applications need a fixed, permanent IP.
+So AWS provides Elastic IP to give you a consistent public endpoint.
+
+# When to Use Elastic IP:
+1. When you need a static public IP
+Example:
+Hosting a website where DNS points to an IP
+APIs where clients whitelist your IP
+
+2. To enable IP failover (high availability)
+You can quickly re-associate an Elastic IP from one instance to another.
+Useful in:
+Disaster recovery
+Active-passive setups
+
+3. When external systems require IP whitelisting
+Payment gateways
+Third-party APIs
+Corporate firewalls
+
+
+4. For NAT instances / Bastion hosts
+Bastion host (jump server) needs a stable IP for SSH access.
+NAT instance needs a static IP for outbound traffic identification.
+
+5. When you don’t want DNS dependency
+Sometimes systems are configured with hardcoded IPs instead of domain names.
+
+⚠️ AWS charges for:
+Unused Elastic IPs means EIPs not attached to running instances
+By default: Limited to 5 Elastic IPs per region
+
+✅ Rule of Thumb
+Use Elastic IP when you must have a fixed public IP, otherwise prefer Load Balancers + DNS.
+
+
+Service      Inbound     Outbound   Role
+Elastic IP      Yes         Yes     Fixed IP
+Load Balancer   Yes         Yes     Traffic Distibution
+NAT Gateway     No          Yes     Secure Outbound access
+
+Elastic IP provides a static IP for a single instance, 
+Load Balancer distributes incoming traffic across multiple instances for scalability and high availability, and 
+NAT Gateway enables secure outbound internet access for private instances without allowing inbound connections.
+
+
+# How do you share the AWS AMI within organization to other teams to use?
+Option 1: Share the AMI with specific AWS accounts (most common)
+
+If each team has its own AWS account:
+
+Create the AMI in the source account.
+Open the EC2 Console → AMIs.
+Select the AMI → Actions → Edit AMI permissions.
+Add the target AWS account IDs that should have access.
+Ensure the associated EBS snapshots are also shared with those accounts (if they're encrypted, you'll also need to share the KMS key).
+
+The recipient accounts can then copy or launch the AMI.
+
+Things to remember -
+EBS snapshots: Sharing an AMI alone isn't enough. The backing snapshots must also be accessible.
+Encrypted AMIs: If snapshots are encrypted with a customer-managed KMS key, you must also grant the destination accounts permission to use the KMS key.
+Cross-Region: AMIs are regional. Copy the AMI to other Regions if needed.
+Permissions: Recipients can usually launch or copy the AMI but cannot modify your original AMI.
+
+# SSD Vs HHD
+An SSD (Solid-State Drive) uses flash memory to store data, making it much faster, quieter, and more durable than an HDD (Hard Disk Drive), which relies on spinning magnetic platters and mechanical read/write heads
+
+
+# User Data in AWS EC2 instance
+A script or set of comamnds that automatically configures an EC2 instance during launch, typically executed on the first boot.
+Generally runs as the root user.
+
+Data execution logs?
+/var/log/cloud-init.log
+/var/log/cloud-init-output.log
+
+What service executes User Data on Linux?
+The cloud-init service.
+
+Does User Data run every reboot?
+
+By default: No. It **runs only on the first boot** for most Linux AMIs.
+If you need a script to run on every boot, you can:
+Configure cloud-init accordingly.
+Use a systemd service.
+Use cron's @reboot.
+Use configuration management tools such as Ansible or Puppet.
+
+# how would you debug a failing User Data script without repeatedly relaunching the instance?
+If a User Data script fails, I avoid repeatedly terminating and relaunching the EC2 instance. Instead, I debug the existing instance by examining logs, running the script manually, and fixing issues incrementally.
+1. The first thing I check is the logs generated by cloud-init
+ sudo cat /var/log/cloud-init.log
+ sudo cat /var/log/cloud-init-output.log
+
+2. Verify whether cloud-init completed successfully 
+ sudo cloud-init status
+
+
+
+

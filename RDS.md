@@ -76,3 +76,42 @@ When we create a RDS , AWS assigns a DNS name to the DB instance. AWS uses that 
 
 IOPS in AWS RDS stands for Input/Output Operations Per Second.
 It measures how many read and write disk operations your database storage can perform every second.
+
+
+# Difference between RDS and Dynamo DB?
+| Amazon RDS                                   | Amazon DynamoDB                                                                 |
+| -------------------------------------------- | ------------------------------------------------------------------------------- |
+| Relational Database                          | NoSQL Key-Value/Document Database                                               |
+| Stores data in tables with relationships     | Stores items in tables without joins                                            |
+| Supports SQL                                 | Does not support traditional SQL (uses API/PartiQL for some queries)            |
+| Fixed schema                                 | Flexible schema                                                                 |
+| Vertical scaling (primarily) + read replicas | Horizontal scaling by design                                                    |
+| ACID transactions                            | Supports ACID transactions, but designed for simple, high-scale access patterns |
+| Best for relational workloads                | Best for massive scale and low latency                                          |
+
+
+Q: Your application serves 20 million users and needs response times under 10 ms. Which database would you choose?
+DynamoDB, because it is designed for massive horizontal scalability and consistently low latency.
+
+Q: Your application performs complex joins across 15 tables.
+RDS, because relational databases are optimized for joins and complex SQL.
+
+Q: Which is easier to scale?
+DynamoDB, because it scales horizontally and automatically partitions data. RDS can scale vertically and also supports read replicas, but scaling relational databases generally requires more planning.
+
+Q: Which database supports foreign keys?
+RDS
+
+Q: Which supports JOIN operations?
+RDS
+
+Q: Which offers lower latency?
+DynamoDB
+
+Q: Which database would you use for session storage?
+DynamoDB
+
+Q: Which is better for financial transactions?
+RDS, because financial systems typically require relational integrity, complex queries, and transactional consistency.
+
+I choose RDS when the application depends on complex relationships and transactional queries, and DynamoDB when I need extremely high throughput, flexible schemas, and predictable low-latency access at large scale, such as for user sessions, shopping carts, or IoT data.
