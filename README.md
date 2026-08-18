@@ -659,6 +659,42 @@ If a User Data script fails, I avoid repeatedly terminating and relaunching the 
 2. Verify whether cloud-init completed successfully 
  sudo cloud-init status
 
+# AWS CLI vs Python Boto3 vs Terraform
+Terraform provisions & manage the infrastructure (VPC, EC2, IAM, EKS, RDS, etc.).
 
+Python (Boto3) automates operational workflows, compliance checks, backups, and reporting.
+Boto3 is the official AWS SDK for Python. your Python program interacts with AWS APIs.
 
+AWS CLI is used in CI/CD pipelines and by engineers for quick operational tasks.
+AWS CLI is a command-line tool that lets you directly interact with AWS services.
 
+In a typical DevOps workflow, 
+Terraform provisions the infrastructure, 
+Python Boto3 automates operational tasks 
+AWS CLI handles lightweight administrative and deployment commands.
+
+# Commands Used Almost Daily by DevOps Engineers
+| Command                                         | Purpose                          |
+| ----------------------------------------------- | -------------------------------- |
+| `aws configure`                                 | Configure AWS credentials        |
+| `aws sts get-caller-identity`                   | Verify account and IAM identity  |
+| `aws ec2 describe-instances`                    | Check EC2 instances              |
+| `aws s3 ls`                                     | List S3 buckets                  |
+| `aws s3 cp`                                     | Upload/download files            |
+| `aws s3 sync`                                   | Synchronize directories with S3  |
+| `aws ecr get-login-password`                    | Authenticate Docker to ECR       |
+| `aws ecs update-service --force-new-deployment` | Trigger an ECS deployment        |
+| `aws eks update-kubeconfig`                     | Connect to an EKS cluster        |
+| `aws logs tail`                                 | Stream CloudWatch logs           |
+| `aws ssm start-session`                         | Access EC2 instances without SSH |
+| `aws rds describe-db-instances`                 | View RDS databases               |
+| `aws cloudwatch describe-alarms`                | Check monitoring alarms          |
+| `aws iam list-roles`                            | Review IAM roles                 |
+| `aws elbv2 describe-target-health`              | Troubleshoot ALB target health   |
+
+# Ways to Use AWS CLI
+1. Local Machine (Most Common for Developers & DevOps)
+2. EC2 Instance
+3. CI/CD Pipelines - jenkins, gitlab, docker , Actions
+4. AWS Cloudshell
+5. Docker container
