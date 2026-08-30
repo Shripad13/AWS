@@ -776,3 +776,14 @@ CPU spike , Memory full (OOM kill) / Disk full
 4. Check System resources  - top, free -m, df -h
 5. Check Database connectivity - mysql -u user -p -h host
 6. Check Recent Deployments - git log, Jenkins
+
+# In canary deployment , some users are facing issue accessing the application but few users are accessible the application without any issue
+Because a canary deployment splits traffic between your old version (Stable) and your new version (Canary), the users facing issues are almost certainly being routed to the new canary instances.
+
+Most common casues:
+1. Sticky Sessions (Session Persistence)The Issue: If your application relies on session data stored in memory (like a user login), users routed to the new canary server might lose their session if it doesn't share a database with the old servers.The Fix: Ensure your load balancer uses sticky sessions during the deployment, or use a distributed session store like Redis.
+   
+2. Database Schema MismatchesThe Issue: The new canary version might require a new database column or table that the old version doesn't support, or vice versa (breaking backward compatibility).The Fix: Ensure all database changes are backward compatible. Use the expand/contract (parallel design) pattern for database migrations.
+3. Caching and CDN IssuesThe Issue: Frontend assets (JS, CSS) might be cached. Users routed to the canary backend might be requesting new assets that their browser (or a CDN) hasn't loaded yet, causing UI crashes.The Fix: Implement strict cache busting (unique file hashes) for every build. 
+
+4. Hardcoded Environment VariablesThe Issue: The canary environment might be missing specific API keys, environment variables, or connection strings that the stable environment has.The Fix: Check the logs of the canary pods/servers specifically for 404, 500, or Connection Refused errors.

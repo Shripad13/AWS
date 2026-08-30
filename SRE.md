@@ -70,6 +70,8 @@ Promises reliability and performance to customers, often with penalties for brea
 
 SLO must always be stricter than SLA.
 
+# Error Budget - 
+An error budget is the acceptable amount of unreliability, downtime, or failed requests a system can experience over a specific period before it violates a Service Level Objective (SLO).
 
 # Mean Time to Repair (MTTR) in ITSM
 It is a key performance indicator (KPI) measuring the average time taken to fix a system or service after a failure, including diagnostic and repair time. It typically spans from detection to full functionality, aiming to minimize downtime and maintain Service Level Agreements (SLAs).
