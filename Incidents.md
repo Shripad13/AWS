@@ -1,33 +1,4 @@
 
-1. The "Silent Killer": Database Connection Pool Exhaustion
-The Scenario: During a marketing flash sale, the primary API began returning 500 errors. Monitoring showed CPU and Memory were fine, but response latency spiked to 30 seconds before timing out.
-
-Rapid Troubleshooting: You noticed a "Thread Starvation" pattern in the logs. While the DB was healthy, the application couldn't get a connection.
-
-Quick Mitigation: Instead of waiting to tune the code, you implemented a temporary rate-limit at the Load Balancer (NGINX/Envoy) to drop 20% of non-critical traffic. This allowed the connection pool to breathe and kept the checkout service alive for the remaining 80% of users.
-
-Teamwork & Reliability: You coordinated with the Backend team to identify a "leaky" transaction in a new loyalty points feature. Post-mitigation, you led the effort to implement exponential backoff on the client side to prevent future thundering herds.
-
-2. The "Regional Brownout": DNS/CDN Latency Spike
-The Scenario: Users in Western Europe reported that the web app was "hanging" on a white screen. Global health checks were green, but localized synthetics showed 10-second delays fetching static assets.
-
-Rapid Troubleshooting: You used mtr and dig to trace the path and realized a specific CDN Edge POP (Point of Presence) was routing traffic through a congested backbone provider.
-
-Quick Mitigation: Under pressure, you performed a DNS Failover, updating the CNAME records to point static traffic to a secondary CDN provider (e.g., switching from Cloudflare to Akamai or AWS CloudFront). This bypassed the regional congestion in minutes.
-
-Responsibility: You didn't wait for the CDN provider's support ticket; you prioritized user uptime. Later, you automated this "Circuit Breaker" pattern for DNS so it could trigger automatically based on regional latency thresholds.
-
-3. The "Resource Quota Wall": Kubernetes OOMKills
-The Scenario: Following a Friday afternoon deployment, a critical microservice began "flapping"—restarting every 5 minutes. This caused a domino effect, as the service was a dependency for the login flow.
-
-Rapid Troubleshooting: You checked kubectl describe pod and saw Reason: OOMKilled. However, the memory limit was already set to what should have been a safe margin.
-
-Quick Mitigation: Rather than rolling back immediately (which might have lost critical new data migrations), you manually patched the Deployment to double the memory limits and added a temporary priorityClassName to ensure these pods weren't evicted from nodes. This stabilized the login flow in under 4 minutes.
-
-Root Cause Analysis (RCA): After the fire was out, you discovered a memory leak in a new telemetry library. You worked with the Dev team to profile the heap and provided the fix, while also setting up "Vertical Pod Autoscaler" (VPA) in recommendation mode to catch these trends earlier.
-
-
-
 # Scenario: The "Silent Killer" (Database Connection Pool Exhaustion)
 Situation:
 "During a high-traffic flash sale, our primary checkout API began throwing 500 errors. Monitoring showed that while the Database CPU was low (around 15%), the application response times spiked from 200ms to over 30 seconds. We were losing thousands of dollars in transactions every minute."

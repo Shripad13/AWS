@@ -6,6 +6,92 @@
 	[ Sprint 1 ] → [ Sprint 2 ] → [ Sprint 3 ] → ... (Continuous delivery & feedback)
 
 
+# "Explain how you would design a highly available AWS application across two Availability Zones." 
+
+                         INTERNET
+                            |
+                     Route 53 / DNS
+                            |
+                    Application Load
+                       Balancer
+                    /             \
+              AZ-1                  AZ-2
+          -------------         -------------
+          Public Subnet         Public Subnet
+          10.0.1.0/24           10.0.2.0/24
+               |                     |
+          NAT Gateway            NAT Gateway
+               |                     |
+          Private App            Private App
+          Subnet                 Subnet
+          10.0.11.0/24          10.0.12.0/24
+               |                     |
+          EC2 / ECS / EKS        EC2 / ECS / EKS
+               |                     |
+               +----------+----------+
+                          |
+                    Private DB Subnets
+                       /        \
+                    AZ-1         AZ-2
+                  DB subnet    DB subnet
+                       \        /
+                     RDS Multi-AZ
+
+I would start with a VPC, for example 10.0.0.0/16, spanning two Availability Zones. In each AZ I would create public, private application and private database subnets.
+
+The Internet-facing traffic would come through Route 53 and an Application Load Balancer deployed across both AZs. The ALB would forward requests to application servers running in private subnets.
+
+For outbound internet connectivity from private workloads, I would use NAT Gateways. For high availability, I would normally deploy one NAT Gateway per AZ and configure each private subnet to use the NAT Gateway in the same AZ.
+
+The public subnets would have routes to the Internet Gateway, while private application subnets would route outbound internet traffic through the NAT Gateway. Database subnets would remain private and would not have direct internet access.
+
+Security Groups would control traffic between the ALB, application and database tiers, and Network ACLs would provide subnet-level stateless filtering.
+
+For the database layer, I would use something like Amazon RDS Multi-AZ so that the database infrastructure is resilient to an AZ failure.
+
+This gives us separation of tiers, controlled internet access, fault tolerance across two AZs and the ability to perform scaling and maintenance with minimal disruption.
+
+
+# VPC- 
+VPC: 10.0.0.0/16 This provides approximately 65K IPv4 addresses.
+Why /16?
+Because it gives enough room for future expansion.
+
+AZ-1                               AZ-2
+-------------------------------------------------------
+Public subnet                      Public subnet
+10.0.1.0/24                        10.0.2.0/24
+
+Private-App subnet                 Private-App subnet
+10.0.11.0/24                       10.0.12.0/24
+
+Private-DB subnet                  Private-DB subnet
+10.0.21.0/24                       10.0.22.0/24
+
+A subnet is an IP address range inside the VPC and is associated with one Availability Zone
+
+6. Public vs Private Subnet
+ A subnet is considered public when its route table contains a route to an Internet Gateway.
+ A subnet is considered Private when its route table contains a route to an NAT Gateway or outbound traffic to internet.
+
+The Internet Gateway (IGW) provides connectivity between the VPC and the internet.
+The IGW is attached to the VPC.
+
+9. NAT Gateway - Allow resources in private subnets to initiate outbound internet connections without allowing unsolicited inbound internet connections.
+
+10. Why do we need an Elastic IP for NAT Gateway?
+    The external website sees the NAT Gateway's public IP rather than the private IP of the EC2 instance.
+
+| Security Group                         | Network ACL                               |
+| -------------------------------------- | ----------------------------------------- |
+| Stateful                               | Stateless                                 |
+| Instance/ENI level                     | Subnet level                              |
+| Allow rules                            | Allow + Deny                              |
+| Return traffic automatically allowed   | Return traffic must be explicitly allowed |
+| Commonly used for application security | Used for subnet-level controls            |
+
+
+
 ## Cross-account IAM in AWS
 Refers to the practice of allowing resources or users in one AWS account (Account A) to securely access resources in another AWS account (Account B), using AWS Identity and Access Management (IAM).
 

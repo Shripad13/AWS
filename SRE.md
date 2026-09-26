@@ -73,6 +73,9 @@ SLO must always be stricter than SLA.
 # Error Budget - 
 An error budget is the acceptable amount of unreliability, downtime, or failed requests a system can experience over a specific period before it violates a Service Level Objective (SLO).
 
+# Circuit Breakers:
+a Circuit Breaker is a design pattern used to prevent an application from repeatedly trying to execute an operation that is highly likely to fail.
+
 # Mean Time to Repair (MTTR) in ITSM
 It is a key performance indicator (KPI) measuring the average time taken to fix a system or service after a failure, including diagnostic and repair time. It typically spans from detection to full functionality, aiming to minimize downtime and maintain Service Level Agreements (SLAs).
 
