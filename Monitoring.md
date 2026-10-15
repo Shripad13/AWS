@@ -1,6 +1,16 @@
 
 Monitoring → Predefined dashboards and alerts.
+Monitoring tells us whether known conditions are healthy or unhealthy. 
+
+
 Observability → About system behavior using telemetry data.
+Observability helps us investigate why a system is behaving in a particular way by correlating metrics, logs, and traces where available.
+
+Metrics: CPU, memory, request latency, build duration, queue time, error rates.
+Logs: Detailed records of events, errors, and execution.
+Traces: Follow a request across multiple services, when distributed tracing is available.
+
+
 telemetry data - Data collected about the performance and behavior of a system.
 
 # Black box Monitoring - Not Visible inside the application. Solarwinds, Zabbix are the Black box monitoring Tools. Usually COnventional tools are this one.

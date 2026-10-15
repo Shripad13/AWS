@@ -991,3 +991,24 @@ AWS CLI handles lightweight administrative and deployment commands.
 3. CI/CD Pipelines - jenkins, gitlab, docker , Actions
 4. AWS Cloudshell
 5. Docker container
+
+# what is difference between NAT instance and NAT gateway?
+a NAT Gateway is a fully managed, highly available AWS service that requires zero maintenance.
+
+a NAT Instance is a self-managed Amazon EC2 virtual machine running NAT software that you must patch, scale, and configure manually.
+
+
+
+Choose a NAT Gateway when:
+
+• You want a hands-off, reliable production environment where AWS handles fault tolerance and scaling.
+• Your application demands high throughput and automatic bandwidth expansion.
+• Operational simplicity and lower administration overhead outweigh the price premium.
+
+
+
+Choose a NAT Instance when:
+
+• You are operating on a tight budget for a small dev/test environment where high availability isn't mandatory.
+• You require port forwarding or need the machine to double as an SSH bastion host.
+• You need custom routing or specialized network monitoring software installed directly on the NAT node.

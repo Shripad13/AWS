@@ -71,7 +71,7 @@ Finally, the observability platform stores, correlates, visualizes, and alerts o
 
  ![Project Architecture](OpenTelemetry_Architecture.png)
 
-Why does this matter for SREs?
+Why does this matter fo r SREs?
 
 Because observability should evolve without constantly changing application code.
 
