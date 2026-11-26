@@ -94,4 +94,81 @@ subscription liases
 50.  how do you run ansible playbook for one host through command ?
 51.  Which Ansible modules you used so far?
 52.  what is ansible credentials module?
-53.  
+53.  🔹What is a Kubernetes Operator?
+🔹What is a Custom Resource Definition (CRD)?
+🔹What is a Custom Controller?
+🔹Explain Operator architecture and how it works.
+🔹What are API groups in Kubernetes?
+🔹What is etcd?
+🔹Explain the OSI model layers and their significance.
+🔹What’s the difference between HTTP and HTTPS?
+🔹What is DNS?
+🔹What happens when you hit www.hashedin.com in a browser?
+🔹What is recursive DNS?
+🔹Explain Git lifecycle from cloning a repo to pushing code.
+🔹What is Git architecture?
+🔹What is a kernel? Is Linux an OS or a kernel?
+🔹Write ten Linux commands and explain their usage.
+🔹Difference between virtualization and containerization.
+🔹Which Linux features help Docker work?
+🔹What is Docker daemon?
+🔹Explain Docker architecture & lifecycle.
+🔹Write five Docker commands and explain them.
+🔹Write a Jenkins pipeline that builds and pushes a Docker image.
+🔹What are namespaces in Kubernetes?
+🔹Write a Pod specification YAML file for an NGINX server.
+🔹What is VPC in AWS?
+🔹Difference between public and private subnets.
+🔹What are NAT Gateway and Internet Gateway?
+🔹Can a NAT Gateway be created inside a private subnet?
+🔹How do instances in private subnets access the internet?
+🔹Write and explain Terraform lifecycle commands.
+🔹What is a state file in Terraform?
+🔹How to manage state files in team collaboration?
+
+💻 Round 3: Technical Interview – 2
+
+Key Questions:
+🔸Write a simple Dockerfile to create a Docker image.
+🔸Explain Docker workflow.
+🔸Why is it essential to make etcd highly available in Kubernetes?
+🔸What happens when you hit a website URL?
+🔸What is an SSL certificate?
+🔸Explain the role of NAT in AWS.
+🔸Difference between S3 buckets and EBS volumes.
+🔸Amazon AMI vs Snapshot—what’s the difference?
+🔸Explain remote state locking in Terraform.
+🔸Difference between MySQL and MongoDB.
+🔸What is a relational database?
+🔸what’s a primary key in SQL?
+
+
+1. Production DB migation is going on and in haflway migration failed,How do you design the to restore the DB or what steps would you take ?
+2. How do you integrate Jira with Agentic AI tool?
+3. How HPA works if traffic increases unexpectedly
+   
+4. What is trivy for image scanning & what it will detect?
+• OS package vulnerabilities (CVEs): Finds known security flaws in operating system packages (such as Debian, Ubuntu, Alpine, or Red Hat) installed inside the image.
+• Application dependency vulnerabilities: Scans language-specific libraries and packages (such as Node.js, Python, Go, or Java dependencies) for known CVEs and available fixes.
+• Exposed secrets: Detects hardcoded sensitive data embedded in image layers or config files, such as API keys, tokens, passwords, and private keys.
+• Misconfigurations: Flags insecure configuration settings or Infrastructure-as-Code (IaC) issues when scanning files or configurations.
+• License issues: Identifies software licenses present in packages so you can check compliance risks. 
+
+# KSB Tech - AWS, Gitlab, K8s, Terraform, Docker
+1. What is SAST & DAST & its Tools ?
+2. How do you remediate vulnerabilities found in Docker image & deployed in Production?
+3. How do you remediate vulnerability in base image instead of creating entire image?
+4. Which one would you prioritize? Remediating the vulnerability image which is in production or Developer wants Staging deployment which is also critical?
+5. How do you approach & troublshoot & fix k8s OOM error?
+6. How do you maintain Docker image ?
+7. How do you deploy 50 microservices using single CICD workflow?
+8. Need to install OS version & Verify on 100 EC2, how do you check?
+9. How do you integarte security in CICD workflow?
+10. How do you use Terraform for multiple environments? 
+11. Deployment is succeded but application is not reachable, how do you troubleshoot?
+
+
+# Deloitte - Team Lead
+1. What is MCP server?
+2. Difference between GenAI & Agentic AI?
+3. How do you integrate Jira with Agentic AI?
